@@ -1,3 +1,7 @@
+## 1.0.3
+
+- Made it simple and Less complicated
+
 ## 1.0.2
 
 - Readme updated

@@ -16,7 +16,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_service_locator: ^1.0.1
+  flutter_service_locator: any
 ```
 
 Then run:
@@ -30,22 +30,23 @@ $ flutter pub get
 ### Setting up dependencies
 
 ```dart
-import 'package:flutter_service_locator/service_locator.dart';
+import 'package:dart_service_locator/dart_service_locator.dart';
 
 void setupDependencies() {
   // Register a synchronous dependency
   register<Logger>(() => ConsoleLogger());
+  register<User>(() => User());
 
   // Register an asynchronous dependency
-  registerAsync<Database>(() async {
+  register<Future<Database>>(() async {
     final db = Database();
     await db.initialize();
     return db;
   });
 
   // Register a dependency that relies on other dependencies
-  registerAsync<UserRepository>(() async {
-    final db = await singleton<Database>();
+  register<Future<UserRepository>>(() async {
+    final db = await singleton<Future<Database>>();
     return UserRepository(db);
   });
 }
@@ -54,13 +55,14 @@ void setupDependencies() {
 ### Using dependencies
 
 ```dart
-import 'package:flutter_service_locator/service_locator.dart';
+import 'package:flutter/material.dart';
+import 'package:dart_service_locator/dart_service_locator.dart';
 
 class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserRepository>(
-      future: singleton<UserRepository>(),
+      future: singleton<Future<UserRepository>>(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final userRepo = snapshot.data!;
@@ -78,22 +80,18 @@ class MyWidget extends StatelessWidget {
 ### Cleaning up
 
 ```dart
-import 'package:flutter_service_locator/service_locator.dart';
+import 'package:dart_service_locator/dart_service_locator.dart';
 
-void cleanUp() async {
-  await clearLocator();
-}
+clear();
 ```
 
 ## API Reference
 
 - `register<T>(T Function() creator)`: Register a synchronous dependency
-- `registerAsync<T>(Future<T> Function() creator)`: Register an asynchronous dependency
 - `singleton<T>()`: Get or create a singleton instance of a dependency
 - `create<T>()`: Create a new instance of a dependency
 - `remove<T>()`: Remove a singleton instance of a dependency
-- `isRegistered<T>()`: Check if a dependency is registered
-- `clearLocator()`: Clear all registered dependencies
+- `clear()`: Clear all registered dependencies
 
 ## Examples
 

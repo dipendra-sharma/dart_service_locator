@@ -1,101 +1,51 @@
 import 'package:dart_service_locator/dart_service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
+// Adjust the import according to your file structure
 
-class TestService {}
-
-class AsyncTestService {
-  Future<void> initialize() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-  }
+class TestService {
+  String getData() => 'Test Data';
 }
 
 void main() {
-  group('ServiceLocator', () {
-    setUp(() async {
-      // Clear the locator before each test
-      await clearLocator();
-    });
+  setUp(() {
+    clear();
+  });
 
-    test('should register and locate synchronous service', () {
-      register<TestService>(() => TestService());
+  test('Register and locate singleton', () {
+    register<TestService>(() => TestService());
 
-      final instance = singleton<TestService>();
+    final service1 = singleton<TestService>();
+    final service2 = singleton<TestService>();
 
-      expect(instance, isA<TestService>());
-    });
+    expect(service1, isA<TestService>());
+    expect(service1, same(service2)); // Should be the same instance
+  });
 
-    test('should register and locate asynchronous service', () async {
-      registerAsync<AsyncTestService>(() async {
-        final service = AsyncTestService();
-        await service.initialize();
-        return service;
-      });
+  test('Create new instance each time', () {
+    register<TestService>(() => TestService());
 
-      final instance = await singletonAsync<AsyncTestService>();
+    final service1 = create<TestService>();
+    final service2 = create<TestService>();
 
-      expect(instance, isA<AsyncTestService>());
-    });
+    expect(service1, isA<TestService>());
+    expect(service1, isNot(same(service2))); // Should be different instances
+  });
 
-    test(
-        'should create new synchronous instance without storing it as singleton',
-        () {
-      register<TestService>(() => TestService());
+  test('Remove singleton', () {
+    register<TestService>(() => TestService());
 
-      final instance1 = create<TestService>();
-      final instance2 = create<TestService>();
+    final service1 = singleton<TestService>();
+    remove<TestService>();
+    final service2 = singleton<TestService>();
 
-      expect(instance1, isNot(same(instance2)));
-    });
+    expect(service1,
+        isNot(same(service2))); // Should be different instances after removal
+  });
 
-    test(
-        'should create new asynchronous instance without storing it as singleton',
-        () async {
-      registerAsync<AsyncTestService>(() async {
-        final service = AsyncTestService();
-        await service.initialize();
-        return service;
-      });
+  test('Register and locate Future', () async {
+    register<Future<String>>(() async => 'Async Data');
 
-      final instance1 = await createAsync<AsyncTestService>();
-      final instance2 = await createAsync<AsyncTestService>();
-
-      expect(instance1, isNot(same(instance2)));
-    });
-
-    test('should remove singleton instance', () {
-      register<TestService>(() => TestService());
-      remove<TestService>();
-      expect(() => singleton<TestService>(),
-          throwsA(isA<ServiceNotRegisteredException>()));
-    });
-
-    test('should clear all registered singletons', () async {
-      register<TestService>(() => TestService());
-      registerAsync<AsyncTestService>(() async {
-        final service = AsyncTestService();
-        await service.initialize();
-        return service;
-      });
-
-      await clearLocator();
-
-      expect(() => singleton<TestService>(),
-          throwsA(isA<ServiceNotRegisteredException>()));
-      expect(() => singletonAsync<AsyncTestService>(),
-          throwsA(isA<ServiceNotRegisteredException>()));
-    });
-
-    test('should check if a factory or async factory is registered', () {
-      register<TestService>(() => TestService());
-      registerAsync<AsyncTestService>(() async {
-        final service = AsyncTestService();
-        await service.initialize();
-        return service;
-      });
-
-      expect(isRegistered<TestService>(), isTrue);
-      expect(isRegistered<AsyncTestService>(), isTrue);
-      expect(isRegistered<String>(), isFalse);
-    });
+    final futureData = await singleton<Future<String>>();
+    expect(futureData, equals('Async Data'));
   });
 }
