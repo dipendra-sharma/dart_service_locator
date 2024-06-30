@@ -1,6 +1,6 @@
 name: dart_service_locator
 description: "A lightweight, flexible dependency injection solution for Flutter applications, supporting both synchronous and asynchronous dependency resolution with minimal boilerplate."
-version: 1.0.0
+version: 1.0.2
 homepage: "https://github.com/dipendra-sharma/dart_service_locator"
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

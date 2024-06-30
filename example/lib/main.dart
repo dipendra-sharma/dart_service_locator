@@ -43,7 +43,7 @@ void setupDependencies() {
   // Register our dependencies
   register<AuthService>(() => FirebaseAuthService());
   registerAsync<UserRepository>(() async {
-    final authService = await singleton<AuthService>();
+    final authService = singleton<AuthService>();
     return UserRepository(authService);
   });
 }
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     setState(() => _isLoading = true);
     try {
-      final userRepo = await singleton<UserRepository>();
+      final userRepo = singleton<UserRepository>();
       final success = await userRepo.login(
         _usernameController.text,
         _passwordController.text,

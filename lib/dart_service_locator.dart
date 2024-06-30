@@ -21,32 +21,48 @@ class ServiceLocator {
     _asyncFactories[T] = creator;
   }
 
-  /// Locates an instance of type [T]. If the instance is not already created, it will be created.
-  Future<T> locate<T>() async {
+  /// Locates a synchronous instance of type [T]. If the instance is not already created, it will be created.
+  T locateSync<T>() {
     if (_singletons.containsKey(T)) {
       return _singletons[T] as T;
-    } else if (_asyncSingletons.containsKey(T)) {
-      return await _asyncSingletons[T] as T;
-    } else {
-      final instance = await _createInstance<T>();
-      if (instance is Future) {
-        _asyncSingletons[T] = instance as Future<dynamic>;
-      } else {
-        _singletons[T] = instance;
-      }
+    } else if (_factories.containsKey(T)) {
+      final instance = _createInstanceSync<T>();
+      _singletons[T] = instance;
       return instance;
+    } else {
+      throw ServiceNotRegisteredException(T);
+    }
+  }
+
+  /// Locates an asynchronous instance of type [T]. If the instance is not already created, it will be created.
+  Future<T> locateAsync<T>() async {
+    if (_asyncSingletons.containsKey(T)) {
+      return await _asyncSingletons[T] as T;
+    } else if (_asyncFactories.containsKey(T)) {
+      final instance = _createInstanceAsync<T>();
+      _asyncSingletons[T] = instance;
+      return instance;
+    } else {
+      throw ServiceNotRegisteredException(T);
     }
   }
 
   /// Removes the singleton instance of type [T].
-  T? remove<T>() {
+  void remove<T>() {
+    _factories.remove(T);
     _asyncSingletons.remove(T);
-    return _singletons.remove(T) as T?;
+    _singletons.remove(T);
+    _asyncFactories.remove(T);
   }
 
-  /// Creates a new instance of type [T] without storing it as a singleton.
-  Future<T> create<T>() async {
-    return await _createInstance<T>();
+  /// Creates a new synchronous instance of type [T] without storing it as a singleton.
+  T createSync<T>() {
+    return _createInstanceSync<T>();
+  }
+
+  /// Creates a new asynchronous instance of type [T] without storing it as a singleton.
+  Future<T> createAsync<T>() async {
+    return await _createInstanceAsync<T>();
   }
 
   /// Clears all registered singletons and disposes them if they implement [Disposable].
@@ -62,17 +78,26 @@ class ServiceLocator {
         await resolvedSingleton.dispose();
       }
     }
+    _factories.clear();
     _singletons.clear();
     _asyncSingletons.clear();
+    _asyncFactories.clear();
   }
 
-  /// Creates an instance of type [T] using the registered factory or async factory.
-  Future<T> _createInstance<T>() async {
+  /// Creates a synchronous instance of type [T] using the registered factory.
+  T _createInstanceSync<T>() {
     final factory = _factories[T];
-    final asyncFactory = _asyncFactories[T];
     if (factory != null) {
       return factory() as T;
-    } else if (asyncFactory != null) {
+    } else {
+      throw ServiceNotRegisteredException(T);
+    }
+  }
+
+  /// Creates an asynchronous instance of type [T] using the registered async factory.
+  Future<T> _createInstanceAsync<T>() async {
+    final asyncFactory = _asyncFactories[T];
+    if (asyncFactory != null) {
       return await asyncFactory() as T;
     } else {
       throw ServiceNotRegisteredException(T);
@@ -100,14 +125,20 @@ class ServiceNotRegisteredException implements Exception {
   String toString() => 'Service not registered in locator: $type';
 }
 
-/// Locates a singleton instance of type [T].
-Future<T> singleton<T>() => ServiceLocator.instance.locate<T>();
+/// Locates a synchronous singleton instance of type [T].
+T singleton<T>() => ServiceLocator.instance.locateSync<T>();
 
-/// Creates a new instance of type [T].
-Future<T> create<T>() => ServiceLocator.instance.create<T>();
+/// Locates an asynchronous singleton instance of type [T].
+Future<T> singletonAsync<T>() => ServiceLocator.instance.locateAsync<T>();
+
+/// Creates a new synchronous instance of type [T].
+T create<T>() => ServiceLocator.instance.createSync<T>();
+
+/// Creates a new asynchronous instance of type [T].
+Future<T> createAsync<T>() => ServiceLocator.instance.createAsync<T>();
 
 /// Removes the singleton instance of type [T].
-T? remove<T>() => ServiceLocator.instance.remove<T>();
+void remove<T>() => ServiceLocator.instance.remove<T>();
 
 /// Registers a synchronous factory for type [T].
 void register<T>(T Function() creator) =>
