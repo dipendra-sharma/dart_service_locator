@@ -88,7 +88,7 @@ clear();
 ## API Reference
 
 - `register<T>(T Function() creator)`: Register a synchronous dependency
-- `singleton<T>()`: Get or create a singleton instance of a dependency
+- `locate<T>()`: Get or create a singleton instance of a dependency
 - `create<T>()`: Create a new instance of a dependency
 - `remove<T>()`: Remove a singleton instance of a dependency
 - `clear()`: Clear all registered dependencies

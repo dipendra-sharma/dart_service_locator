@@ -3,15 +3,15 @@ library dart_service_locator;
 import 'dart:collection';
 
 /// A simple service locator for managing singleton and factory instances.
-class _ServiceLocator {
+class ServiceLocator {
   final Map<Type, dynamic> _singletons = HashMap<Type, dynamic>();
   final Map<Type, Function> _factories = HashMap<Type, Function>();
 
   // Private constructor
-  _ServiceLocator._();
+  ServiceLocator._();
 
   // Public accessor
-  static final _ServiceLocator instance = _ServiceLocator._();
+  static final ServiceLocator I = ServiceLocator._();
 
   /// Registers a factory function for creating instances of type [T].
   void register<T>(T Function() creator) {
@@ -56,17 +56,16 @@ class _ServiceLocator {
 }
 
 /// Shortcut to locate a singleton instance of type [T].
-T singleton<T>() => _ServiceLocator.instance.locate<T>();
+T locate<T>() => ServiceLocator.I.locate<T>();
 
 /// Shortcut to create a new instance of type [T].
-T create<T>() => _ServiceLocator.instance.create<T>();
+T create<T>() => ServiceLocator.I.create<T>();
 
 /// Shortcut to remove the singleton instance of type [T].
-void remove<T>() => _ServiceLocator.instance.remove<T>();
+void remove<T>() => ServiceLocator.I.remove<T>();
 
 /// Shortcut to register a factory function for creating instances of type [T].
-void register<T>(T Function() creator) =>
-    _ServiceLocator.instance.register(creator);
+void register<T>(T Function() creator) => ServiceLocator.I.register(creator);
 
 /// Shortcut to remove all dependencies.
-void clear() => _ServiceLocator.instance.clear();
+void clear() => ServiceLocator.I.clear();

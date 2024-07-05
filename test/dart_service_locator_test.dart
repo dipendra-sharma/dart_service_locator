@@ -14,8 +14,8 @@ void main() {
   test('Register and locate singleton', () {
     register<TestService>(() => TestService());
 
-    final service1 = singleton<TestService>();
-    final service2 = singleton<TestService>();
+    final service1 = locate<TestService>();
+    final service2 = locate<TestService>();
 
     expect(service1, isA<TestService>());
     expect(service1, same(service2)); // Should be the same instance
@@ -34,9 +34,9 @@ void main() {
   test('Remove singleton', () {
     register<TestService>(() => TestService());
 
-    final service1 = singleton<TestService>();
+    final service1 = locate<TestService>();
     remove<TestService>();
-    final service2 = singleton<TestService>();
+    final service2 = locate<TestService>();
 
     expect(service1,
         isNot(same(service2))); // Should be different instances after removal
@@ -45,7 +45,7 @@ void main() {
   test('Register and locate Future', () async {
     register<Future<String>>(() async => 'Async Data');
 
-    final futureData = await singleton<Future<String>>();
+    final futureData = await locate<Future<String>>();
     expect(futureData, equals('Async Data'));
   });
 }

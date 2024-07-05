@@ -28,7 +28,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myService = singleton<MyService>();
+    final myService = locate<MyService>();
 
     return Scaffold(
       appBar: AppBar(
