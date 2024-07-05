@@ -46,7 +46,7 @@ void setupDependencies() {
 
   // Register a dependency that relies on other dependencies
   register<Future<UserRepository>>(() async {
-    final db = await singleton<Future<Database>>();
+    final db = await locate<Future<Database>>();
     return UserRepository(db);
   });
 }
@@ -62,7 +62,7 @@ class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserRepository>(
-      future: singleton<Future<UserRepository>>(),
+      future: locate<Future<UserRepository>>(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final userRepo = snapshot.data!;
@@ -88,9 +88,9 @@ clear();
 ## API Reference
 
 - `register<T>(T Function() creator)`: Register a synchronous dependency
-- `locate<T>()`: Get or create a singleton instance of a dependency
+- `locate<T>()`: Get or create a locate instance of a dependency
 - `create<T>()`: Create a new instance of a dependency
-- `remove<T>()`: Remove a singleton instance of a dependency
+- `remove<T>()`: Remove a locate instance of a dependency
 - `clear()`: Clear all registered dependencies
 
 ## Examples

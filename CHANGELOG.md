@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Documentation update
+
 ## 1.0.4
 
 - `ServiceLocator` class is now publicly available
