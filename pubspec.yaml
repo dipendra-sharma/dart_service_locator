@@ -1,11 +1,11 @@
 name: dart_service_locator
 description: "A lightweight dependency injection solution for Dart applications, supporting singleton and factory patterns with named instances and disposal callbacks."
-version: 2.0.0
+version: 2.0.1
 homepage: "https://github.com/dipendra-sharma/dart_service_locator"
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dev_dependencies:
-  test: ^1.24.0
-  lints: ^4.0.0
+  test: ^1.25.0
+  lints: ^6.0.0

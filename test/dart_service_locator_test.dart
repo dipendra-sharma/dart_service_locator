@@ -124,7 +124,8 @@ void main() {
       final service1 = DisposableService();
       final service2 = DisposableService();
       register<DisposableService>(() => service1, dispose: (s) => s.close());
-      register<DisposableService>(() => service2, instanceName: 'named', dispose: (s) => s.close());
+      register<DisposableService>(() => service2,
+          instanceName: 'named', dispose: (s) => s.close());
 
       locate<DisposableService>();
       locate<DisposableService>(instanceName: 'named');
@@ -140,7 +141,8 @@ void main() {
 
     test('Dispose only called if instance was created', () {
       var disposeCalled = false;
-      register<TestService>(() => TestService(), dispose: (_) => disposeCalled = true);
+      register<TestService>(() => TestService(),
+          dispose: (_) => disposeCalled = true);
       remove<TestService>();
       expect(disposeCalled, isFalse);
     });
@@ -149,7 +151,8 @@ void main() {
       final service1 = DisposableService();
       final service2 = DisposableService();
       register<DisposableService>(() => service1, dispose: (s) => s.close());
-      register<DisposableService>(() => service2, instanceName: 'named', dispose: (s) => s.close());
+      register<DisposableService>(() => service2,
+          instanceName: 'named', dispose: (s) => s.close());
 
       locate<DisposableService>();
       locate<DisposableService>(instanceName: 'named');

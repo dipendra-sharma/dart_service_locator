@@ -81,7 +81,8 @@ void main() {
   print('Logger registered: ${isRegistered<Logger>()}');
   print('UserRepository registered: ${isRegistered<UserRepository>()}');
   register<UserRepository>(() => UserRepository(locate<Database>()));
-  print('UserRepository registered (after): ${isRegistered<UserRepository>()}\n');
+  print(
+      'UserRepository registered (after): ${isRegistered<UserRepository>()}\n');
 
   // 6. Dependency chain
   print('6. Dependency chain:');

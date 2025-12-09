@@ -104,8 +104,11 @@ void main() {
         locate<BenchService>();
       }
       sw.stop();
-      final locateOps = sw.elapsedMicroseconds > 0 ? iterations * 1000000 ~/ sw.elapsedMicroseconds : iterations * 1000000;
-      print('locate: $locateOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
+      final locateOps = sw.elapsedMicroseconds > 0
+          ? iterations * 1000000 ~/ sw.elapsedMicroseconds
+          : iterations * 1000000;
+      print(
+          'locate: $locateOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
 
       // create (factory)
       sw = Stopwatch()..start();
@@ -113,8 +116,11 @@ void main() {
         create<BenchService>();
       }
       sw.stop();
-      final createOps = sw.elapsedMicroseconds > 0 ? iterations * 1000000 ~/ sw.elapsedMicroseconds : iterations * 1000000;
-      print('create: $createOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
+      final createOps = sw.elapsedMicroseconds > 0
+          ? iterations * 1000000 ~/ sw.elapsedMicroseconds
+          : iterations * 1000000;
+      print(
+          'create: $createOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
 
       // isRegistered
       sw = Stopwatch()..start();
@@ -122,12 +128,16 @@ void main() {
         isRegistered<BenchService>();
       }
       sw.stop();
-      final isRegOps = sw.elapsedMicroseconds > 0 ? iterations * 1000000 ~/ sw.elapsedMicroseconds : iterations * 1000000;
-      print('isRegistered: $isRegOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
+      final isRegOps = sw.elapsedMicroseconds > 0
+          ? iterations * 1000000 ~/ sw.elapsedMicroseconds
+          : iterations * 1000000;
+      print(
+          'isRegistered: $isRegOps ops/sec (${(sw.elapsedMicroseconds / iterations).toStringAsFixed(3)}µs/op)');
 
       // Expect high throughput
       expect(locateOps, greaterThan(100000), reason: 'locate should be fast');
-      expect(isRegOps, greaterThan(100000), reason: 'isRegistered should be fast');
+      expect(isRegOps, greaterThan(100000),
+          reason: 'isRegistered should be fast');
     });
 
     test('Minimal overhead - locate vs direct map access baseline', () {
@@ -151,9 +161,11 @@ void main() {
       }
       sw2.stop();
 
-      final overhead = sw2.elapsedMicroseconds > 0 ? sw1.elapsedMicroseconds / sw2.elapsedMicroseconds : 1.0;
-      print('locate time: ${sw1.elapsedMicroseconds}µs (${iterations} ops)');
-      print('direct map time: ${sw2.elapsedMicroseconds}µs (${iterations} ops)');
+      final overhead = sw2.elapsedMicroseconds > 0
+          ? sw1.elapsedMicroseconds / sw2.elapsedMicroseconds
+          : 1.0;
+      print('locate time: ${sw1.elapsedMicroseconds}µs ($iterations ops)');
+      print('direct map time: ${sw2.elapsedMicroseconds}µs ($iterations ops)');
       print('overhead ratio: ${overhead.toStringAsFixed(2)}x');
 
       // Should be < 10x overhead vs raw map access

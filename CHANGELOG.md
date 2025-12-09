@@ -1,3 +1,8 @@
+## 2.0.1
+
+- Updated dependencies: `lints` ^6.0.0, `test` ^1.25.0
+- Code quality improvements and lint fixes
+
 ## 2.0.0
 
 ### Breaking Changes

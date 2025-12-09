@@ -1,5 +1,3 @@
-library dart_service_locator;
-
 import 'dart:collection';
 
 /// Composite key for Type + optional instance name
@@ -26,7 +24,8 @@ class ServiceLocator {
   static final ServiceLocator I = ServiceLocator._();
 
   /// Registers a factory function for creating instances of type [T].
-  void register<T>(T Function() creator, {String? instanceName, void Function(T)? dispose}) {
+  void register<T>(T Function() creator,
+      {String? instanceName, void Function(T)? dispose}) {
     final key = _Key(T, instanceName);
     _factories[key] = creator;
     _disposers[key] = dispose;
@@ -42,10 +41,12 @@ class ServiceLocator {
   }
 
   /// Creates a new instance of type [T] every time it is called.
-  T create<T>({String? instanceName}) => _createInstance<T>(_Key(T, instanceName));
+  T create<T>({String? instanceName}) =>
+      _createInstance<T>(_Key(T, instanceName));
 
   /// Checks if a service of type [T] is registered.
-  bool isRegistered<T>({String? instanceName}) => _factories.containsKey(_Key(T, instanceName));
+  bool isRegistered<T>({String? instanceName}) =>
+      _factories.containsKey(_Key(T, instanceName));
 
   /// Removes the singleton instance of type [T], calling dispose if registered.
   void remove<T>({String? instanceName}) {
@@ -72,25 +73,32 @@ class ServiceLocator {
   T _createInstance<T>(_Key key) {
     final factory = _factories[key];
     if (factory != null) return factory() as T;
-    throw Exception('Service not registered: ${key.type}${key.name != null ? ' (${key.name})' : ''}');
+    throw Exception(
+        'Service not registered: ${key.type}${key.name != null ? ' (${key.name})' : ''}');
   }
 }
 
 /// Shortcut to locate a singleton instance of type [T].
-T locate<T>({String? instanceName}) => ServiceLocator.I.locate<T>(instanceName: instanceName);
+T locate<T>({String? instanceName}) =>
+    ServiceLocator.I.locate<T>(instanceName: instanceName);
 
 /// Shortcut to create a new instance of type [T].
-T create<T>({String? instanceName}) => ServiceLocator.I.create<T>(instanceName: instanceName);
+T create<T>({String? instanceName}) =>
+    ServiceLocator.I.create<T>(instanceName: instanceName);
 
 /// Shortcut to check if a service of type [T] is registered.
-bool isRegistered<T>({String? instanceName}) => ServiceLocator.I.isRegistered<T>(instanceName: instanceName);
+bool isRegistered<T>({String? instanceName}) =>
+    ServiceLocator.I.isRegistered<T>(instanceName: instanceName);
 
 /// Shortcut to remove the singleton instance of type [T].
-void remove<T>({String? instanceName}) => ServiceLocator.I.remove<T>(instanceName: instanceName);
+void remove<T>({String? instanceName}) =>
+    ServiceLocator.I.remove<T>(instanceName: instanceName);
 
 /// Shortcut to register a factory function for creating instances of type [T].
-void register<T>(T Function() creator, {String? instanceName, void Function(T)? dispose}) =>
-    ServiceLocator.I.register<T>(creator, instanceName: instanceName, dispose: dispose);
+void register<T>(T Function() creator,
+        {String? instanceName, void Function(T)? dispose}) =>
+    ServiceLocator.I
+        .register<T>(creator, instanceName: instanceName, dispose: dispose);
 
 /// Shortcut to remove all dependencies.
 void clear() => ServiceLocator.I.clear();
