@@ -1,3 +1,25 @@
+## 2.0.0
+
+### Breaking Changes
+- Removed Flutter SDK dependency - now pure Dart package
+- `clear()` now removes all registrations (not just singletons)
+
+### New Features
+- **Named instances**: Register multiple implementations of the same type
+  ```dart
+  register<Logger>(() => ConsoleLogger(), instanceName: 'console');
+  register<Logger>(() => FileLogger(), instanceName: 'file');
+  ```
+- **Disposal callbacks**: Automatic cleanup when services are removed
+  ```dart
+  register<Database>(() => Database(), dispose: (db) => db.close());
+  ```
+- **`isRegistered<T>()`**: Check if a service is registered before locating
+
+### Improvements
+- Better error messages with type and instance name context
+- Works in all Dart environments (CLI, server, Flutter, web)
+
 ## 1.0.5
 
 - Documentation update
@@ -8,7 +30,7 @@
 
 ## 1.0.3
 
-- Made it simple and Less complicated
+- Made it simple and less complicated
 
 ## 1.0.2
 
