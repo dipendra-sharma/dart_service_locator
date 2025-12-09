@@ -12,7 +12,7 @@ A lightweight, fast **dependency injection (DI) container** for Dart and Flutter
 
 ```yaml
 dependencies:
-  dart_service_locator: ^2.0.0
+  dart_service_locator: any
 ```
 
 ### Basic Usage
